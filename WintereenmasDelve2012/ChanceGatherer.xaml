@@ -1,0 +1,58 @@
+﻿<Page x:Class="WintereenmasDelve2012.ChanceGatherer"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+	Title="ChanceGatherer">
+	<Page.Resources>
+		<Style x:Key="TextBlockStyle" TargetType="TextBlock">
+			<Setter Property="FontFamily" Value="Old English Text MT" />
+			<Setter Property="FontSize" Value="40" />
+			<Setter Property="Foreground" Value="#ffffffff" />
+			<Setter Property="TextWrapping" Value="Wrap" />
+		</Style>
+		<Style x:Key="TextBoxStyle" TargetType="TextBox">
+			<Setter Property="FontFamily" Value="Old English Text MT" />
+			<Setter Property="FontSize" Value="40" />
+		</Style>
+		<Style x:Key="ButtonStyle" TargetType="Button">
+			<Setter Property="FontFamily" Value="Old English Text MT" />
+			<Setter Property="FontSize" Value="40" />
+		</Style>
+	</Page.Resources>
+    <Grid>
+		
+
+		<Image Source="Images/Intro.png" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+
+		<StackPanel Orientation="Vertical" VerticalAlignment="Bottom" MaxWidth="700" Margin="0,0,0,50">
+			<TextBlock x:Name="xamlInputRequest" Text="Xargon Commands You To Enter A Number Between 1 and 6"
+				   Style="{StaticResource TextBlockStyle}" FontSize="50" TextAlignment="Center"
+				   Margin="0,0,0,20"
+			/>
+
+			<Grid x:Name="xamlAllInput">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition Width="20" />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+
+				<TextBlock Text="Your Identification" Grid.Column="0" Grid.Row="0" VerticalAlignment="Bottom" Style="{StaticResource TextBlockStyle}" />
+				<TextBlock Text="The Number" Grid.Column="2" Grid.Row="0" VerticalAlignment="Bottom" Style="{StaticResource TextBlockStyle}" />
+
+				<TextBox x:Name="xamlNameInput" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Style="{StaticResource TextBoxStyle}" />
+				<TextBox x:Name="xamlValueInput" Grid.Column="2" Grid.Row="1" VerticalAlignment="Top" Style="{StaticResource TextBoxStyle}" />
+
+				<Button Content="Done" Style="{StaticResource ButtonStyle}" Grid.ColumnSpan="3" Grid.Row="2" Margin="0,20,0,0" MaxWidth="200" Click="OnDoneClick" />
+			</Grid>
+		</StackPanel>
+	</Grid>
+</Page>

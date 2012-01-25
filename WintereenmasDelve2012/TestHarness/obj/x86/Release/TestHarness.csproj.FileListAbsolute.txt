@@ -1,0 +1,9 @@
+C:\Dev\WintereenmasDelve2012\WintereenmasDelve2012\TestHarness\bin\Release\TestHarness.exe
+C:\Dev\WintereenmasDelve2012\WintereenmasDelve2012\TestHarness\bin\Release\TestHarness.pdb
+C:\Dev\WintereenmasDelve2012\WintereenmasDelve2012\TestHarness\bin\Release\PathFinding.dll
+C:\Dev\WintereenmasDelve2012\WintereenmasDelve2012\TestHarness\bin\Release\PathFinding.pdb
+C:\Dev\WintereenmasDelve2012\WintereenmasDelve2012\TestHarness\obj\x86\Release\ResolveAssemblyReference.cache
+C:\Dev\WintereenmasDelve2012\WintereenmasDelve2012\TestHarness\obj\x86\Release\TestHarness.exe
+C:\Dev\WintereenmasDelve2012\WintereenmasDelve2012\TestHarness\obj\x86\Release\TestHarness.pdb
+C:\dev\WintereenmasDelve2012\WintereenmasDelve2012\TestHarness\bin\Release\WintereenmasDelve2012.exe
+C:\dev\WintereenmasDelve2012\WintereenmasDelve2012\TestHarness\bin\Release\WintereenmasDelve2012.pdb

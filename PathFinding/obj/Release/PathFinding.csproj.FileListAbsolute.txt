@@ -1,0 +1,5 @@
+C:\Dev\WintereenmasDelve2012\PathFinding\bin\Release\PathFinding.dll
+C:\Dev\WintereenmasDelve2012\PathFinding\bin\Release\PathFinding.pdb
+C:\Dev\WintereenmasDelve2012\PathFinding\obj\Release\ResolveAssemblyReference.cache
+C:\Dev\WintereenmasDelve2012\PathFinding\obj\Release\PathFinding.dll
+C:\Dev\WintereenmasDelve2012\PathFinding\obj\Release\PathFinding.pdb

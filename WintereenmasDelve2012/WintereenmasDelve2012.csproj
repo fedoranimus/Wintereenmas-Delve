@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{77D11318-466A-42F9-BCF3-4938075DC2D8}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WintereenmasDelve2012</RootNamespace>
+    <AssemblyName>WintereenmasDelve2012</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Speech" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="ChanceGatherer.xaml.cs">
+      <DependentUpon>ChanceGatherer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\chance\ChanceSubmission.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\Avatar.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\controllers\QuestController.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClassDwarf.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClassElf.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClassGoblin.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClassMummy.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClassOrc.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClassWizard.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\Faction.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\controllers\MasterController.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\Hero.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClass.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClassBarbarian.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\LocationOfInterest.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\items\Item.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\items\ItemSlot.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\MapAnalyzer.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\Monster.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\movement\ChanceMovementBehavior.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\movement\ConstantMovementBehavior.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\movement\IAvatarMovementBehavior.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\AbstractQuest.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tileActions\AbstractTileAction.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tileActions\IRequiresHero.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tileActions\IRequiresModifiableMap.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tileActions\OpenDoorAction.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tileActions\OpenTreasureChestAction.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\IModifiableMap.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\MapTile.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\MapTileSet.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\QuestMap.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\QuestMapRoom.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\RockTile.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\StaircaseTileSet.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\TreasureChestVerticalTile.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\DoorHorizontalTileSet.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\DoorVerticalTileSet.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\FloorBlockedTile.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\FloorEmptyTile.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\TreasureChestHorizontalTile.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\WallHorizontalBottomTile.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\WallHorizontalTopTile.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\WallVerticalLeftTile.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\WallVerticalRightTile.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\PointList.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\TwoLinkedPoints.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\TheRescueOfSirRagnar.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\TheTrial.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\turnStepAction\DeadTurnStepAction.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\turnStepAction\MovementTurnStepAction.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\turnStepAction\TurnStepAction.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\Point.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\Rectangle.cs" />
+    <Compile Include="GameIntroduction.xaml.cs">
+      <DependentUpon>GameIntroduction.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HeroesLose.xaml.cs">
+      <DependentUpon>HeroesLose.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="QuestView.xaml.cs">
+      <DependentUpon>QuestView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\chance\SixSidedDie.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\storyTelling\Story.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\storyTelling\StoryLine.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\storyTelling\StoryTeller.cs" />
+    <Page Include="ChanceGatherer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GameIntroduction.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HeroesLose.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\chance\ChanceProvider.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="QuestView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PathFinding\PathFinding.csproj">
+      <Project>{C61F0B85-9BD8-43AB-BB20-E5285DEF84AA}</Project>
+      <Name>PathFinding</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Intro.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MapTiles\BookshelfVerticalA.png" />
+    <Resource Include="Images\MapTiles\BookshelfVerticalB.png" />
+    <Resource Include="Images\MapTiles\BookshelfVerticalC.png" />
+    <Resource Include="Images\MapTiles\Fimir.png" />
+    <Resource Include="Images\MapTiles\FloorTileBlocked.png" />
+    <Resource Include="Images\MapTiles\FloorTileEmpty.png" />
+    <Resource Include="Images\MapTiles\Goblin.png" />
+    <Resource Include="Images\MapTiles\Orc.png" />
+    <Resource Include="Images\MapTiles\RockTile.png" />
+    <Resource Include="Images\MapTiles\TableVerticalA.png" />
+    <Resource Include="Images\MapTiles\TableVerticalB.png" />
+    <Resource Include="Images\MapTiles\TableVerticalC.png" />
+    <Resource Include="Images\MapTiles\TableVerticalD.png" />
+    <Resource Include="Images\MapTiles\TableVerticalE.png" />
+    <Resource Include="Images\MapTiles\TableVerticalF.png" />
+    <Resource Include="Images\MapTiles\WallHorizontalBottom.png" />
+    <Resource Include="Images\MapTiles\WallHorizontalTop.png" />
+    <Resource Include="Images\MapTiles\WallVerticalLeft.png" />
+    <Resource Include="Images\MapTiles\WallVerticalRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MapTiles\DoorHorizontalBottom.png" />
+    <Resource Include="Images\MapTiles\DoorHorizontalTop.png" />
+    <Resource Include="Images\MapTiles\DoorVerticalLeft.png" />
+    <Resource Include="Images\MapTiles\DoorVerticalRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MapTiles\TreasureChestHorizontal.png" />
+    <Resource Include="Images\MapTiles\TreasureChestVertical.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\MapTiles\StaircaseA.png" />
+    <Resource Include="Images\MapTiles\StaircaseB.png" />
+    <Resource Include="Images\MapTiles\StaircaseC.png" />
+    <Resource Include="Images\MapTiles\StaircaseD.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MapTiles\HeroBarbarian.png" />
+    <Resource Include="Images\MapTiles\HeroDwarf.png" />
+    <Resource Include="Images\MapTiles\HeroElf.png" />
+    <Resource Include="Images\MapTiles\HeroWizard.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

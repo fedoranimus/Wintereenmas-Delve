@@ -1,0 +1,23 @@
+﻿<Page x:Class="WintereenmasDelve2012.HeroesLose"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="600"
+	Title="HeroesLose" Background="Black">
+	<Page.Resources>
+		<Style x:Key="TextBlockStyle" TargetType="TextBlock">
+			<Setter Property="FontFamily" Value="Old English Text MT" />
+			<Setter Property="FontSize" Value="40" />
+			<Setter Property="Foreground" Value="#ffffffff" />
+			<Setter Property="TextWrapping" Value="Wrap" />
+		</Style>
+	</Page.Resources>
+	
+    <Grid>
+		<Image Source="Images/Intro.png" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+
+		<TextBlock Text="All of the Heroes have died! Xargon wins!" Width="500" Margin="0,0,0,100" Grid.Column="0" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" Style="{StaticResource TextBlockStyle}" TextAlignment="Center" />
+	</Grid>
+</Page>
