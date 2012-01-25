@@ -92,14 +92,22 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 			List<LocationOfInterest> movementDestinations = mapAnalyzer.GetInterestingLocations(this);
 			movementDestinations = movementDestinations.OrderBy(item => item.StepsToLocation).ToList();
 
-			MovementTurnStepAction action = null;
+			// TODO: Implement AI
+			TurnStepAction action = null;
+			if (movementDestinations.Count <= 0)
+			{
+				action = new ConfusedTurnStepAction(this); // In the real game, this should never happen.  Avatars should always find *something* to do.
+				_movementPointsLeftForTurn = 0; // End the turn
+				_hasTakenTurnAction = true; // End the turn
+			}
+			else
+			{
+				action = new MovementTurnStepAction(this, movementDestinations[0].StepsToLocation[0]);
+				_movementPointsLeftForTurn--;
+			}
 
-			//MovementTurnStepAction action = new MovementTurnStepAction(this, movementDestinations[0]);
-			// Determine whether to Movement first, or Action first.
-
-			ActualBodyPointsRemaining -= 2; // Testing death scenario
-			_movementPointsLeftForTurn--;
-			_hasTakenTurnAction = true;
+			//ActualBodyPointsRemaining -= 2; // Testing death scenario
+			_hasTakenTurnAction = true; // TODO: only set to true if the Avatar has taken their turn action
 
 			return action;
 		}
