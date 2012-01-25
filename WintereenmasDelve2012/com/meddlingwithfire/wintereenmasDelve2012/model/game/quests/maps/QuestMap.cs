@@ -14,8 +14,6 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 		private const int MAP_WIDTH_IN_TILES = 26;
 		private const int MAP_HEIGHT_IN_TILES = 19;
 
-		//public List<PathfindingNode> PathfindingNodes;
-		//public List<NodeConnection> PathfindingConnections;
 		public PathGraph PathfindingGraph;
 
 		public List<Point> HeroStartingLocations;
@@ -23,18 +21,21 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 		/// <summary>
 		/// Keys are the zero-based index of the coordinates "0x0" represents the origin, "25x18" represents the lower right edge.
 		/// </summary>
-		private Dictionary<String, List<MapTile>> _questTiles;
+		private Dictionary<String, MapTileList> _questTiles;
 
 		/// <summary>
 		/// Enables us to quickly pull the location out for the map tile.
 		/// </summary>
 		private Dictionary<MapTile, Point> _mapTileLocations;
 
+		private Dictionary<PathfindingNode, Point> _pathfindingPoints;
+
 		public QuestMap(Point staircaseOrigin)
 			: base()
 		{
-			_questTiles = new Dictionary<string, List<MapTile>>();
+			_questTiles = new Dictionary<string, MapTileList>();
 			_mapTileLocations = new Dictionary<MapTile, Point>();
+			_pathfindingPoints = new Dictionary<PathfindingNode, Point>();
 
 			HeroStartingLocations = new List<Point>();
 			HeroStartingLocations.Add(new Point(staircaseOrigin.X, staircaseOrigin.Y));
@@ -57,7 +58,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 			{
 				for (int x = 0; x < MAP_WIDTH_IN_TILES; x++)
 				{
-					List<MapTile> tiles = GetMapTilesForLocation(x, y);
+					MapTileList tiles = GetMapTilesForLocation(x, y);
 					for(int i=tiles.Count-1; i >= 0; i--)
 					{
 						MapTile tile = tiles[i];
@@ -89,7 +90,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 		public void MoveMapTile(MapTile tile, Point toPoint)
 		{
 			Point tileLocation = _mapTileLocations[tile];
-			List<MapTile> locationTiles = GetMapTilesForPoint(tileLocation);
+			MapTileList locationTiles = GetMapTilesForPoint(tileLocation);
 			if (!locationTiles.Contains(tile))
 			{ throw new Exception("QuestMap MoveMapTile(tile, toPoint) called, but no tile was found!"); }
 			else
@@ -98,7 +99,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 				locationTiles.Remove(tile);
 				
 				// And add it to the new location
-				List<MapTile> newLocationTiles = GetMapTilesForPoint(toPoint);
+				MapTileList newLocationTiles = GetMapTilesForPoint(toPoint);
 				newLocationTiles.Add(tile);
 				_mapTileLocations[tile] = toPoint;
 			}
@@ -110,7 +111,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 			{
 				for (int x = 0; x < MAP_WIDTH_IN_TILES; x++)
 				{
-					List<MapTile> tiles = GetMapTilesForLocation(x, y);
+					MapTileList tiles = GetMapTilesForLocation(x, y);
 					if (tiles.Contains(mapTile))
 					{ return new Point(x, y); }
 				}
@@ -125,22 +126,22 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 			{
 				MapTile tile = tiles[i];
 				Point relativeLocation = tileSet.GetRelativeLocationFor(tile);
-				List<MapTile> locationTiles = GetMapTilesForLocation(origin.X + relativeLocation.X, origin.Y + relativeLocation.Y);
+				MapTileList locationTiles = GetMapTilesForLocation(origin.X + relativeLocation.X, origin.Y + relativeLocation.Y);
 				locationTiles.Add(tile);
 				_mapTileLocations[tile] = new Point(origin.X + relativeLocation.X, origin.Y + relativeLocation.Y);
 			}
 		}
 
-		public List<MapTile> GetMapTilesForPoint(Point point)
+		public MapTileList GetMapTilesForPoint(Point point)
 		{ return GetMapTilesForLocation(point.X, point.Y); }
 
-		public List<MapTile> GetMapTilesForLocation(int x, int y)
+		public MapTileList GetMapTilesForLocation(int x, int y)
 		{
 			String key = GetKeyForLocation(x, y);
-			List<MapTile> mapTiles = null;
+			MapTileList mapTiles = null;
 			if (!_questTiles.ContainsKey(key))
 			{
-				mapTiles = new List<MapTile>();
+				mapTiles = new MapTileList();
 				_questTiles[key] = mapTiles;
 			}
 			else
@@ -224,7 +225,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 			{
 				for (int x = area.X; x < area.Width; x++)
 				{
-					List<MapTile> mapTiles = GetMapTilesForLocation(x, y);
+					MapTileList mapTiles = GetMapTilesForLocation(x, y);
 					MapTile tileToAdd = (MapTile)tileTemplate.Clone();
 					if (mapTiles.Count > 0)
 					{
@@ -246,7 +247,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 			{
 				for (int x = area.X; x < area.Width; x++)
 				{
-					List<MapTile> mapTiles = GetMapTilesForLocation(x, y);
+					MapTileList mapTiles = GetMapTilesForLocation(x, y);
 					MapTile tileToAdd = (MapTile)tileTemplate.Clone();
 					mapTiles.Add(tileToAdd);
 					_mapTileLocations[tileToAdd] = new Point(x, y);
@@ -322,8 +323,8 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 			{ throw new ArgumentException("Can only remove barriers between two adjacent tiles!"); }
 			
 			// Get the tile sets=
-			List<MapTile> aTiles = GetMapTilesForLocation(aX, aY);
-			List<MapTile> bTiles = GetMapTilesForLocation(bX, bY);
+			MapTileList aTiles = GetMapTilesForLocation(aX, aY);
+			MapTileList bTiles = GetMapTilesForLocation(bX, bY);
 
 			// Remove any blocking connections that are between those two tiles.  This could use some optimization
 			if (aY != bY) // It's vertical
@@ -428,8 +429,8 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 			{ throw new ArgumentException("Can only put doors between two adjacent tiles!"); }
 
 			// Get the tile sets for A
-			List<MapTile> aTiles = GetMapTilesForLocation(aX, aY);
-			List<MapTile> bTiles = GetMapTilesForLocation(bX, bY);
+			MapTileList aTiles = GetMapTilesForLocation(aX, aY);
+			MapTileList bTiles = GetMapTilesForLocation(bX, bY);
 
 			// Remove any blocking connections that are between those two tiles.
 			RemoveBarriersBetween(aX, aY, bX, bY);
@@ -548,120 +549,72 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 			if (distance <= 0)
 			{ throw new ArgumentException("QuestMap DoAdjacentPointsObstructLineOfSight(a, b) points were the same point!"); }
 
-			List<MapTile> aTiles = GetMapTilesForPoint(pointA);
-			List<MapTile> bTiles = GetMapTilesForPoint(pointB);
+			MapTileList aTiles = GetMapTilesForPoint(pointA);
+			MapTileList bTiles = GetMapTilesForPoint(pointB);
 			
 			if (pointA.Y > pointB.Y)
 			{
 				if (pointA.X > pointB.X)
 				{
-					foreach (MapTile tile in aTiles)
-					{
-						if (tile.BlocksLineOfSight || (tile.BlocksLineOfSightNorth || tile.BlocksLineOfSightWest))
-						{ return true; }
-					}
-					foreach (MapTile tile in bTiles)
-					{
-						if (tile.BlocksLineOfSight || (tile.BlocksLineOfSightSouth || tile.BlocksLineOfSightEast))
-						{ return true; }
-					}
+					if (aTiles.BlocksLineOfSight || (aTiles.BlocksLineOfSightNorth || aTiles.BlocksLineOfSightWest))
+					{ return true; }
+					if (bTiles.BlocksLineOfSight || (bTiles.BlocksLineOfSightSouth || bTiles.BlocksLineOfSightEast))
+					{ return true; }
 				}
 				else if (pointA.X == pointB.X)
 				{
-					foreach (MapTile tile in aTiles)
-					{
-						if (tile.BlocksLineOfSight || tile.BlocksLineOfSightNorth)
-						{ return true; }
-					}
-					foreach (MapTile tile in bTiles)
-					{
-						if (tile.BlocksLineOfSight || tile.BlocksLineOfSightSouth)
-						{ return true; }
-					}
+					if (aTiles.BlocksLineOfSight || aTiles.BlocksLineOfSightNorth)
+					{ return true; }
+					if (bTiles.BlocksLineOfSight || bTiles.BlocksLineOfSightSouth)
+					{ return true; }
 				}
 				else
 				{
-					foreach (MapTile tile in aTiles)
-					{
-						if (tile.BlocksLineOfSight || (tile.BlocksLineOfSightNorth || tile.BlocksLineOfSightEast))
-						{ return true; }
-					}
-					foreach (MapTile tile in bTiles)
-					{
-						if (tile.BlocksLineOfSight || (tile.BlocksLineOfSightSouth || tile.BlocksLineOfSightWest))
-						{ return true; }
-					}
+					if (aTiles.BlocksLineOfSight || (aTiles.BlocksLineOfSightNorth || aTiles.BlocksLineOfSightEast))
+					{ return true; }
+					if (bTiles.BlocksLineOfSight || (bTiles.BlocksLineOfSightSouth || bTiles.BlocksLineOfSightWest))
+					{ return true; }
 				}
 			}
 			if (pointA.Y < pointB.Y)
 			{
 				if (pointA.X > pointB.X)
 				{
-					foreach (MapTile tile in aTiles)
-					{
-						if (tile.BlocksLineOfSight || (tile.BlocksLineOfSightSouth || tile.BlocksLineOfSightWest))
-						{ return true; }
-					}
-					foreach (MapTile tile in bTiles)
-					{
-						if (tile.BlocksLineOfSight || (tile.BlocksLineOfSightNorth || tile.BlocksLineOfSightEast))
-						{ return true; }
-					}
+					if (aTiles.BlocksLineOfSight || (aTiles.BlocksLineOfSightSouth || aTiles.BlocksLineOfSightWest))
+					{ return true; }
+					if (bTiles.BlocksLineOfSight || (bTiles.BlocksLineOfSightNorth || bTiles.BlocksLineOfSightEast))
+					{ return true; }
 				}
 				else if (pointA.X == pointB.X)
 				{
-					foreach (MapTile tile in aTiles)
-					{
-						if (tile.BlocksLineOfSight || tile.BlocksLineOfSightSouth)
-						{ return true; }
-					}
-					foreach (MapTile tile in bTiles)
-					{
-						if (tile.BlocksLineOfSight || tile.BlocksLineOfSightNorth)
-						{ return true; }
-					}
+					if (aTiles.BlocksLineOfSight || aTiles.BlocksLineOfSightSouth)
+					{ return true; }
+					if (bTiles.BlocksLineOfSight || bTiles.BlocksLineOfSightNorth)
+					{ return true; }
 				}
 				else
 				{
-					foreach (MapTile tile in aTiles)
-					{
-						if (tile.BlocksLineOfSight || (tile.BlocksLineOfSightSouth || tile.BlocksLineOfSightEast))
-						{ return true; }
-					}
-					foreach (MapTile tile in bTiles)
-					{
-						if (tile.BlocksLineOfSight || (tile.BlocksLineOfSightNorth || tile.BlocksLineOfSightWest))
-						{ return true; }
-					}
+					if (aTiles.BlocksLineOfSight || (aTiles.BlocksLineOfSightSouth || aTiles.BlocksLineOfSightEast))
+					{ return true; }
+					if (bTiles.BlocksLineOfSight || (bTiles.BlocksLineOfSightNorth || bTiles.BlocksLineOfSightWest))
+					{ return true; }
 				}
 			}
 			else // y's are same
 			{
 				if (pointA.X > pointB.X)
 				{
-					foreach (MapTile tile in aTiles)
-					{
-						if (tile.BlocksLineOfSight || tile.BlocksLineOfSightWest)
-						{ return true; }
-					}
-					foreach (MapTile tile in bTiles)
-					{
-						if (tile.BlocksLineOfSight || tile.BlocksLineOfSightEast)
-						{ return true; }
-					}
+					if (aTiles.BlocksLineOfSight || aTiles.BlocksLineOfSightWest)
+					{ return true; }
+					if (bTiles.BlocksLineOfSight || bTiles.BlocksLineOfSightEast)
+					{ return true; }
 				}
 				else
 				{
-					foreach (MapTile tile in aTiles)
-					{
-						if (tile.BlocksLineOfSight || tile.BlocksLineOfSightEast)
-						{ return true; }
-					}
-					foreach (MapTile tile in bTiles)
-					{
-						if (tile.BlocksLineOfSight || tile.BlocksLineOfSightWest)
-						{ return true; }
-					}
+					if (aTiles.BlocksLineOfSight || aTiles.BlocksLineOfSightEast)
+					{ return true; }
+					if (bTiles.BlocksLineOfSight || bTiles.BlocksLineOfSightWest)
+					{ return true; }
 				}
 			}
 
@@ -672,24 +625,21 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 		{
 			PointList adjacentPoints = new PointList();
 
-			List<MapTile> originTiles = GetMapTilesForPoint(origin);
+			MapTileList originTiles = GetMapTilesForPoint(origin);
 			Boolean originBlocksLineOfSightNorth = false;
 			Boolean originBlocksLineOfSightEast = false;
 			Boolean originBlocksLineOfSightSouth = false;
 			Boolean originBlocksLineOfSightWest = false;
-			foreach(MapTile tile in originTiles)
-			{
-				if (tile.BlocksLineOfSight)
-				{ return adjacentPoints; } // If the tile itself blocks all line of sight, then nothing is visible
-				if (tile.BlocksLineOfSightNorth)
-				{ originBlocksLineOfSightNorth = true; }
-				if (tile.BlocksLineOfSightEast)
-				{ originBlocksLineOfSightEast = true; }
-				if (tile.BlocksLineOfSightSouth)
-				{ originBlocksLineOfSightSouth = true; }
-				if (tile.BlocksLineOfSightWest)
-				{ originBlocksLineOfSightWest = true; }
-			}
+			if (originTiles.BlocksLineOfSight)
+			{ return adjacentPoints; } // If the tile itself blocks all line of sight, then nothing is visible
+			if (originTiles.BlocksLineOfSightNorth)
+			{ originBlocksLineOfSightNorth = true; }
+			if (originTiles.BlocksLineOfSightEast)
+			{ originBlocksLineOfSightEast = true; }
+			if (originTiles.BlocksLineOfSightSouth)
+			{ originBlocksLineOfSightSouth = true; }
+			if (originTiles.BlocksLineOfSightWest)
+			{ originBlocksLineOfSightWest = true; }
 
 			if (origin.X > 0 &&  !originBlocksLineOfSightWest && !skipPoints.ContainsLocation(origin.X - 1, origin.Y))
 			{ adjacentPoints.Add(new Point(origin.X - 1, origin.Y)); }
@@ -716,6 +666,11 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 			return PathfindingGraph.FindNodeByIdentifier(identifier);
 		}
 
+		public Point GetPointForPathfindingNode(PathfindingNode node)
+		{
+			return  _pathfindingPoints[node];
+		}
+
 		/// <summary>
 		/// This method should be called when all of the traversable locations are entered.  Note, do NOT place DOORs before calling
 		/// this method.  Doors require actions to be traversable, so they would block the path.
@@ -732,7 +687,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 				for (int x = 0; x < MAP_WIDTH_IN_TILES; x++)
 				{
 					String locationKey = GetKeyForLocation(x, y);
-					List<MapTile> locationTiles = GetMapTilesForLocation(x, y);
+					MapTileList locationTiles = GetMapTilesForLocation(x, y);
 					
 					Boolean locationIsTraversable = true;
 					Boolean isTraversableNorth = true;
@@ -762,6 +717,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 						System.Diagnostics.Debug.WriteLine("Location " + locationKey + " is traversable!");
 
 						PathfindingNode node = new PathfindingNode(locationKey);
+						_pathfindingPoints[node] = new Point(x, y);
 						pathfindingGraph.AddNode(node);
 
 						// Look for connections in all directions: North, East, South, 
@@ -875,7 +831,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 			{
 				for (int x = 0; x < MAP_WIDTH_IN_TILES; x++)
 				{
-					List<MapTile> locationTiles = GetMapTilesForLocation(x, y);
+					MapTileList locationTiles = GetMapTilesForLocation(x, y);
 					foreach (MapTile tile in locationTiles)
 					{
 						if (tile.HasActionsFor(faction))
@@ -891,77 +847,44 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 		{
 			List<Point> pointsBetween = new List<Point>();
 
-			if (pointA.X == pointB.X)
+			// http://en.wikipedia.org/wiki/Bresenham_algorithm
+			int dx = Math.Abs(pointB.X - pointA.X);
+			int dy = Math.Abs(pointB.Y - pointA.Y);
+			int sx = -1;
+			if (pointA.X < pointB.X)
+			{ sx = 1; }
+
+			int sy = -1;
+			if (pointA.Y < pointB.Y)
+			{ sy = 1; }
+
+			int err = dx - dy;
+
+			Boolean doBreak = false;
+			int x0 = pointA.X;
+			int y0 = pointA.Y;
+			while (!doBreak)
 			{
-				int dY = Math.Abs(pointA.Y - pointB.Y);
-				int velocityY = 1;
-				if (pointA.Y > pointB.Y)
-				{ velocityY = -1; }
-
-				for (int y = pointA.Y; y != pointB.Y; y += velocityY)
-				{ pointsBetween.Add(new Point(pointA.X, y)); }
-				pointsBetween.Add(new Point(pointB.X, pointB.Y));
-			}
-			else
-			{
-				int dX = Math.Abs(pointA.X - pointB.X);
-				if (dX == 1)
-				{
-					int dY = Math.Abs(pointA.Y - pointB.Y);
-					int midY = dY / 2;
-					int velocityY = 1;
-					if (pointA.Y > pointB.Y)
-					{ velocityY = -1; }
-
-					for (int y = 0; y <= midY; y++)
-					{ pointsBetween.Add(new Point(pointA.X, pointA.Y + (y * velocityY))); }
-
-					if (dY % 2 == 0) // If dY is even, start at one less
-					{ midY--; }
-					for (int y = midY; y >= 0; y--)
-					{
-						pointsBetween.Add(new Point(pointB.X, pointB.Y + (y * -velocityY)));
-					}
-				}
+				pointsBetween.Add(new Point(x0, y0));
+				if (x0 == pointB.X && y0 == pointB.Y)
+				{ doBreak = true; }
 				else
 				{
-					double slope = (pointA.Y - pointB.Y) / (double)(pointA.X - pointB.X);
-					Rectangle area = Rectangle.FromTwoPoints(pointA, pointB);
-					Point currentPoint = null;
-					double currentY = area.Y;
-					if (slope >= 1)
+					int e2 = 2 * err;
+					if (e2 > -dy)
 					{
-						for (int x = area.X; x < area.X + area.Width; x++)
-						{
-							for (int currentSlope = 0; currentSlope < slope; currentSlope++)
-							{
-								currentPoint = new Point(x, Convert.ToInt32(currentY));
-								pointsBetween.Add(currentPoint);
-								currentY++;
-							}
-						}
-						pointsBetween.Add(new Point(area.X + area.Width, area.Y + area.Height));
-					}
-					else
-					{
-						for (int x = area.X + 1; x < area.X + area.Width; x++)
-						{
-							currentY += slope;
-							currentPoint = new Point(x, Convert.ToInt32(currentY));
-							pointsBetween.Add(currentPoint);
-						}
-						pointsBetween.Add(new Point(area.X + area.Width, area.Y + area.Height));
+						err = err - dy;
+						x0 = x0 + sx;
 					}
 
-					// Cut out any points outside of the rectangle, incase our slope wasn't evenly distributed inside the rectangle
-					for (int i = pointsBetween.Count - 1; i >= 0; i--)
+					if (e2 < dx)
 					{
-						currentPoint = pointsBetween[i];
-						if (!area.Contains(currentPoint))
-						{ pointsBetween.RemoveAt(i); }
+						err = err + dx;
+						y0 = y0 + sy;
 					}
 				}
 			}
+
 
 			return pointsBetween;
 		}
