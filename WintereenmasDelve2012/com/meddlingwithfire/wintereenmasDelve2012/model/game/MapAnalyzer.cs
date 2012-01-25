@@ -62,9 +62,18 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 			{
 				PathfindingNode pointNode = _questMap.GetPathfindingNodeForLocation(point.X, point.Y);
 				List<PathfindingNode> path = _questMap.PathfindingGraph.FindRoute(observerNode, pointNode);
+				if (path != null)
+				{
+					List<Point> pathSteps = new List<Point>();
+					for (int i = 1; i < path.Count; i++)
+					{ pathSteps.Add(_questMap.GetPointForPathfindingNode(path[i])); }
+
+					LocationOfInterest interest = new LocationOfInterest(pathSteps);
+					locationsOfInterest.Add(interest);
+				}
 			}
 
-			return null;
+			return locationsOfInterest;
 		}
 
 		public List<Point> GetUnvisitedMapCoordinatesOrderedByProximity(Avatar observer, int maximumSteps)

@@ -3,3 +3,8 @@ C:\dev\WintereenmasDelve2012\PathFinding\bin\Debug\PathFinding.pdb
 C:\dev\WintereenmasDelve2012\PathFinding\obj\Debug\ResolveAssemblyReference.cache
 C:\dev\WintereenmasDelve2012\PathFinding\obj\Debug\PathFinding.dll
 C:\dev\WintereenmasDelve2012\PathFinding\obj\Debug\PathFinding.pdb
+C:\dev\WintereenmasDelve2012-git\PathFinding\bin\Debug\PathFinding.dll
+C:\dev\WintereenmasDelve2012-git\PathFinding\bin\Debug\PathFinding.pdb
+C:\dev\WintereenmasDelve2012-git\PathFinding\obj\Debug\ResolveAssemblyReference.cache
+C:\dev\WintereenmasDelve2012-git\PathFinding\obj\Debug\PathFinding.dll
+C:\dev\WintereenmasDelve2012-git\PathFinding\obj\Debug\PathFinding.pdb

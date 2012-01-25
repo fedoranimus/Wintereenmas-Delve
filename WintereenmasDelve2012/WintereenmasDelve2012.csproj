@@ -83,6 +83,7 @@
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\movement\ConstantMovementBehavior.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\movement\IAvatarMovementBehavior.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\AbstractQuest.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\MapTileList.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tileActions\AbstractTileAction.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tileActions\IRequiresHero.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tileActions\IRequiresModifiableMap.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\WallHorizontalTopTile.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\WallVerticalLeftTile.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\WallVerticalRightTile.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\turnStepAction\ConfusedTurnStepAction.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\PointList.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\TwoLinkedPoints.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\TheRescueOfSirRagnar.cs" />
