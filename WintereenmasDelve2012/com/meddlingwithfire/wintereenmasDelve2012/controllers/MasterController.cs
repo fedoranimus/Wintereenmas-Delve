@@ -36,9 +36,9 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 
 			// This skips straight to the QuestView
 			List<ChanceSubmission> submissions = new List<ChanceSubmission>();
-			submissions.Add(new ChanceSubmission() { SubmitterName = "Jonathon", Value = 1 });
-			submissions.Add(new ChanceSubmission() { SubmitterName = "Jonathon", Value = 2 });
-			submissions.Add(new ChanceSubmission() { SubmitterName = "Jonathon", Value = 3 });
+			submissions.Add(new ChanceSubmission() { SubmitterName = "Jonathon", Value = 6 });
+			submissions.Add(new ChanceSubmission() { SubmitterName = "Jonathon", Value = 6 });
+			submissions.Add(new ChanceSubmission() { SubmitterName = "Jonathon", Value = 6 });
 			_chanceProvider = new ChanceProvider(submissions);
 			OnGameIntroductionComplete(null, null);
 		}
@@ -63,9 +63,9 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 			// Fire up the first Quest!
 			_heroes = new List<Hero>();
 			_heroes.Add(new Hero(new AvatarClassBarbarian(_chanceProvider)));
-			_heroes.Add(new Hero(new AvatarClassDwarf(_chanceProvider)));
-			_heroes.Add(new Hero(new AvatarClassElf(_chanceProvider)));
-			_heroes.Add(new Hero(new AvatarClassWizard(_chanceProvider)));
+			//_heroes.Add(new Hero(new AvatarClassDwarf(_chanceProvider)));
+			//_heroes.Add(new Hero(new AvatarClassElf(_chanceProvider)));
+			//_heroes.Add(new Hero(new AvatarClassWizard(_chanceProvider)));
 
 			TheTrial questOne = new TheTrial(_heroes);
 			QuestView questView = new QuestView(questOne, _chanceProvider, _storyTeller);
