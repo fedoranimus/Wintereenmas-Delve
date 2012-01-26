@@ -105,16 +105,21 @@ namespace PathFinding
 			while (pointsLeftToVisit.Count > 0 && startPoint == null)
 			{
 				currentPoint = pointsLeftToVisit[0];
-				pointsLeftToVisit.RemoveAt(0);
-				visitedPoints.Add(currentPoint);
-				newPoints = GetNewMoveableCoordinatesFromPoint(currentPoint, visitedPoints);
-				foreach (PathStep point in newPoints)
+				if (currentPoint.Node == startNode)
+				{ startPoint = currentPoint; }
+				else
 				{
-					pointsLeftToVisit.Add(point);
-					if (point.Node == startNode)
+					pointsLeftToVisit.RemoveAt(0);
+					visitedPoints.Add(currentPoint);
+					newPoints = GetNewMoveableCoordinatesFromPoint(currentPoint, visitedPoints);
+					foreach (PathStep point in newPoints)
 					{
-						startPoint = point;
-						break;
+						pointsLeftToVisit.Add(point);
+						if (point.Node == startNode)
+						{
+							startPoint = point;
+							break;
+						}
 					}
 				}
 			}
