@@ -21,6 +21,7 @@ using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.chance;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.turnStepAction;
 using System.Windows.Threading;
+using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.quests.maps.tileActions;
 
 namespace WintereenmasDelve2012
 {
@@ -59,7 +60,7 @@ namespace WintereenmasDelve2012
 			_currentTurnTakerIndex = -1;
 
 			_turnTimer = new DispatcherTimer();
-			_turnTimer.Interval = TimeSpan.FromMilliseconds(1000);
+			_turnTimer.Interval = TimeSpan.FromMilliseconds(500);
 			_turnTimer.Tick += OnTurnTimerTick;
 
 			Loaded += OnLoaded;

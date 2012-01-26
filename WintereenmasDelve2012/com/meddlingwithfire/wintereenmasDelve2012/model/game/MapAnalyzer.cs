@@ -42,6 +42,29 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 			}
 		}
 
+		public List<AbstractTileAction> GetActionsForObserverLocation(Avatar observer)
+		{
+			Point observerLocation = _questMap.GetMapTileLocation(_avatarTiles[observer]);
+
+			//// Get a list of all actionable map tiles
+			PointList interestingLocations = _questMap.GetActionableMapPoints(observer.Faction);
+
+			// Filter out interesting locations that are not in the visible set
+			PointList observerLocations = new PointList();
+			observerLocations.Add(observerLocation);
+			PointList visibleInterestingLocations = interestingLocations.Intersects(observerLocations);
+
+			List<AbstractTileAction> actions = new List<AbstractTileAction>();
+			for (int i = 0; i < visibleInterestingLocations.Count; i++)
+			{
+				List<AbstractTileAction> actionsAtInterestingLocation = _questMap.GetActionsForPoint(observerLocation);
+				foreach (AbstractTileAction actionAtInterestingLocation in actionsAtInterestingLocation)
+				{ actions.Add(actionAtInterestingLocation); }
+			}
+
+			return actions;
+		}
+
 		public List<LocationOfInterest> GetInterestingLocations(Avatar observer)
 		{
 			List<LocationOfInterest> locationsOfInterest = new List<LocationOfInterest>();
@@ -52,7 +75,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 			//// Get a list of all actionable map tiles
 			PointList interestingLocations = _questMap.GetActionableMapPoints(observer.Faction);
 			
-			// TODO: Filter out interesting locations that are not in the visible set
+			// Filter out interesting locations that are not in the visible set
 			PointList visibleInterestingLocations = interestingLocations.Intersects(visibleLocations);
 
 			// Create paths to each of these points
@@ -76,16 +99,57 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 			return locationsOfInterest;
 		}
 
-		public List<Point> GetUnvisitedMapCoordinatesOrderedByProximity(Avatar observer, int maximumSteps)
+		public List<LocationOfInterest> GetInterestingLocationsCheating(Avatar observer)
 		{
-			List<Point> unvisitedCoordinates = new List<Point>();
+			List<LocationOfInterest> locationsOfInterest = new List<LocationOfInterest>();
 
 			Point observerLocation = _questMap.GetMapTileLocation(_avatarTiles[observer]);
-			unvisitedCoordinates.Add(new Point(observerLocation.X + 1, observerLocation.Y));
+			PointList visibleLocations = _questMap.GetPointsWithinLineOfSightOf(observerLocation);
 
-			return unvisitedCoordinates;
+			//// Get a list of all actionable map tiles
+			PointList interestingLocations = _questMap.GetActionableMapPoints(observer.Faction);
+
+			// Create paths to each of these points
+			MapTile observerMapTile = _avatarTiles[observer];
+			PathfindingNode observerNode = _questMap.GetPathfindingNodeForTile(observerMapTile);
+			foreach (Point point in interestingLocations)
+			{
+				PathfindingNode pointNode = _questMap.GetPathfindingNodeForLocation(point.X, point.Y);
+				List<PathfindingNode> path = _questMap.PathfindingGraph.FindRoute(observerNode, pointNode);
+				if (path != null)
+				{
+					List<Point> pathSteps = new List<Point>();
+					for (int i = 1; i < path.Count; i++)
+					{ pathSteps.Add(_questMap.GetPointForPathfindingNode(path[i])); }
+
+					LocationOfInterest interest = new LocationOfInterest(pathSteps);
+					locationsOfInterest.Add(interest);
+					return locationsOfInterest;
+				}
+			}
+
+			return locationsOfInterest;
 		}
 
+		public PointList GetAdjacentUnvisitedLocations(Avatar observer)
+		{
+			Point observerLocation = _questMap.GetMapTileLocation(_avatarTiles[observer]);
+			PointList points = _questMap.GetAdjacentUnwalkedTiles(observerLocation, observer.Faction);
+
+			// Favor points in the direction of the Avatars' movement vector
+			Point desiredPoint = new Point(
+				observerLocation.X + observer.movementVector.X,
+				observerLocation.Y + observer.movementVector.Y
+			);
+
+			if (!points.ContainsLocation(desiredPoint.X, desiredPoint.Y))
+			{ return points; }
+
+			PointList match = new PointList() { desiredPoint };
+			points = points.Intersects(match);
+
+			return points;
+		}
 
 		private Boolean DoesListContainLocation(List<Point> list, int locationX, int locationY)
 		{

@@ -29,7 +29,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 
 		public void TakeOverExperience()
 		{
-			//// First, go to the Chance Gatherer
+			// First, go to the Chance Gatherer
 			//ChanceGatherer chanceGatherer = new ChanceGatherer();
 			//chanceGatherer.Complete += OnChanceGathererComplete;
 			//_navigationService.Navigate(chanceGatherer);
@@ -62,8 +62,8 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 		{
 			// Fire up the first Quest!
 			_heroes = new List<Hero>();
-			_heroes.Add(new Hero(new AvatarClassBarbarian(_chanceProvider)));
-			//_heroes.Add(new Hero(new AvatarClassDwarf(_chanceProvider)));
+			//_heroes.Add(new Hero(new AvatarClassBarbarian(_chanceProvider)));
+			_heroes.Add(new Hero(new AvatarClassDwarf(_chanceProvider)));
 			//_heroes.Add(new Hero(new AvatarClassElf(_chanceProvider)));
 			//_heroes.Add(new Hero(new AvatarClassWizard(_chanceProvider)));
 

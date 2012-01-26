@@ -63,8 +63,8 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 			Map.AddTile(11, 7, new TreasureChestHorizontalTile());
 			Map.AddTile(17, 16, new TreasureChestVerticalTile());
 
-			AddMonster(new Monster(new AvatarClassOrc()), new Point(7, 14));
-			AddMonster(new Monster(new AvatarClassOrc()), new Point(8, 15));
+			//AddMonster(new Monster(new AvatarClassOrc()), new Point(7, 14));
+			//AddMonster(new Monster(new AvatarClassOrc()), new Point(8, 15));
 		}
 	}
 }

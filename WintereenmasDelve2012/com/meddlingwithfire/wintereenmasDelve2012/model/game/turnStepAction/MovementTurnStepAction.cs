@@ -11,28 +11,34 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model
 {
 	public class MovementTurnStepAction : TurnStepAction
 	{
-		private Avatar _actor;
+		private Avatar _avatar;
 		private Point _moveToPoint;
 
 		public MovementTurnStepAction(Avatar actor, Point toLocation)
 			: base()
 		{
-			_actor = actor;
+			_avatar = actor;
 			_moveToPoint = toLocation;
 		}
 
 		override public void Commit(QuestMap map, Dictionary<Avatar, MapTile> avatarTiles, StoryTeller storyTeller)
 		{
 			Story story = new Story();
-			story.Add(storyTeller.NarratorVoice, _actor.ClassDescription + " moves");
+			story.Add(storyTeller.NarratorVoice, _avatar.ClassDescription + " moves");
 			storyTeller.StoryComplete += OnStoryComplete;
 			storyTeller.TellStory(story);
 
 			// Look up the avatars tile
-			MapTile avatarTile = avatarTiles[_actor];
+			MapTile avatarTile = avatarTiles[_avatar];
+			Point avatarCurrentLocation = map.GetMapTileLocation(avatarTile);
+
+			// Update the avatars vector
+			_avatar.movementVector.X = _moveToPoint.X - avatarCurrentLocation.X;
+			_avatar.movementVector.Y = _moveToPoint.Y - avatarCurrentLocation.Y;
 
 			// Move the tile
 			map.MoveMapTile(avatarTile, _moveToPoint);
+			map.SetFactionWalkedOn(_avatar.Faction, _moveToPoint);
 		}
 
 		private void OnStoryComplete(object sender, EventArgs args)
