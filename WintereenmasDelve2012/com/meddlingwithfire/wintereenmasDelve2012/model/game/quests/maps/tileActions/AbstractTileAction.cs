@@ -8,10 +8,12 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model
 {
 	public class AbstractTileAction
 	{
-		public AbstractTileAction()
+		public Boolean ConsumesTurnAction;
+
+		public AbstractTileAction(Boolean consumesAction)
 			: base()
 		{
-
+			ConsumesTurnAction = consumesAction;
 		}
 
 		virtual public Boolean IsAvailableTo(Faction faction)

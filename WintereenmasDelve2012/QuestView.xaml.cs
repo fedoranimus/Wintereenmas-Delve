@@ -21,6 +21,7 @@ using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.chance;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.turnStepAction;
 using System.Windows.Threading;
+using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.quests.maps.tileActions;
 
 namespace WintereenmasDelve2012
 {
@@ -43,7 +44,7 @@ namespace WintereenmasDelve2012
 		private Avatar _currentTurnTaker;
 		private int _currentTurnTakerIndex;
 
-		private MapAnalyzer _gameStateAnalyzer;
+		private QuestAnalyzer _questAnalyzer;
 		private DispatcherTimer _turnTimer;
 
 		public QuestView(AbstractQuest quest, ChanceProvider chanceProvider, StoryTeller storyTeller)
@@ -59,7 +60,7 @@ namespace WintereenmasDelve2012
 			_currentTurnTakerIndex = -1;
 
 			_turnTimer = new DispatcherTimer();
-			_turnTimer.Interval = TimeSpan.FromMilliseconds(1000);
+			_turnTimer.Interval = TimeSpan.FromMilliseconds(500);
 			_turnTimer.Tick += OnTurnTimerTick;
 
 			Loaded += OnLoaded;
@@ -133,7 +134,7 @@ namespace WintereenmasDelve2012
 			_currentTurnTaker = _turnTakers[_currentTurnTakerIndex];
 			_currentTurnTaker.StartTurn();
 
-			_gameStateAnalyzer = new MapAnalyzer(_quest.Map, _quest.AvatarMapTiles);
+			_questAnalyzer = new QuestAnalyzer(_quest);
 			PerformNextTurnCycle(); // Immediately take one turn
 		}
 
@@ -153,7 +154,7 @@ namespace WintereenmasDelve2012
 			}
 			else
 			{
-				TurnStepAction action = _currentTurnTaker.DoTakeTurnStep(_gameStateAnalyzer, _chanceProvider);
+				TurnStepAction action = _currentTurnTaker.DoTakeTurnStep(_questAnalyzer, _chanceProvider);
 
 				if (action == null) // The current player has no more steps to take
 				{
@@ -167,7 +168,7 @@ namespace WintereenmasDelve2012
 				else
 				{
 					action.Complete += OnCurrentActionCommitComplete;
-					action.Commit(_quest.Map, _quest.AvatarMapTiles, _storyTeller);
+					action.Commit(_quest, _storyTeller);
 				}
 
 				RenderQuestBoard();

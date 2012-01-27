@@ -11,7 +11,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model
 		public TreasureChestVerticalTile()
 			: base("Images/MapTiles/TreasureChestVertical.png", false, false, false, false, false)
 		{
-			Actions.Add(new OpenTreasureChestAction());
+			Actions.Add(new OpenTreasureChestAction(this));
 		}
 	}
 }

@@ -6,10 +6,11 @@ using PathFinding;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.quests.maps;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.quests.maps.tiles;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model;
+using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.quests.maps.tileActions;
 
 namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.quests.maps
 {
-	public class QuestMap : IModifiableMap
+	public class QuestMap
 	{
 		private const int MAP_WIDTH_IN_TILES = 26;
 		private const int MAP_HEIGHT_IN_TILES = 19;
@@ -30,12 +31,15 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 
 		private Dictionary<PathfindingNode, Point> _pathfindingPoints;
 
+		private Dictionary<Faction, PointList> _tilesWalkedOn;
+
 		public QuestMap(Point staircaseOrigin)
 			: base()
 		{
 			_questTiles = new Dictionary<string, MapTileList>();
 			_mapTileLocations = new Dictionary<MapTile, Point>();
 			_pathfindingPoints = new Dictionary<PathfindingNode, Point>();
+			_tilesWalkedOn = new Dictionary<Faction, PointList>();
 
 			HeroStartingLocations = new List<Point>();
 			HeroStartingLocations.Add(new Point(staircaseOrigin.X, staircaseOrigin.Y));
@@ -49,6 +53,39 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 			AddMapTileSetTo(staircaseOrigin, new StaircaseTileSet());
 
 			CreateInitialWalls();
+		}
+
+		public void SetFactionWalkedOn(Faction faction, Point point)
+		{
+			PointList factionWalkedOn = null;
+			if (!_tilesWalkedOn.ContainsKey(faction))
+			{
+				factionWalkedOn = new PointList();
+				_tilesWalkedOn[faction] = factionWalkedOn;
+			}
+			else
+			{ factionWalkedOn = _tilesWalkedOn[faction]; }
+
+			if (!factionWalkedOn.ContainsLocation(point.X, point.Y))
+			{ factionWalkedOn.Add(point); }
+		}
+
+		public PointList GetAdjacentUnwalkedTiles(Point origin, Faction faction)
+		{
+			PointList list = GetVisibleAdjacentPoints(origin, new PointList());
+
+			PointList factionWalkedOnList = new PointList();
+			if (_tilesWalkedOn.ContainsKey(faction))
+			{ factionWalkedOnList = _tilesWalkedOn[faction]; }
+			
+			for(int i=list.Count-1; i >= 0; i--)
+			{
+				Point point = list[i];
+				if (factionWalkedOnList.ContainsLocation(point.X, point.Y))
+				{ list.RemoveAt(i); }
+			}
+
+			return list;
 		}
 
 		public void RemoveMapTile(MapTile removeTile)
@@ -841,6 +878,12 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 			}
 
 			return actionableLocations;
+		}
+
+		public List<AbstractTileAction> GetActionsForPoint(Point point)
+		{
+			MapTileList tileList = GetMapTilesForPoint(point);
+			return tileList.Actions;
 		}
 
 		private List<Point> GetStraightPathBetweenTwoPoints(Point pointA, Point pointB)

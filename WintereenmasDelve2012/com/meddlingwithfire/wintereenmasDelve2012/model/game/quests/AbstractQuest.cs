@@ -44,6 +44,26 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 			Monsters = new List<Monster>();
 		}
 
+		public Point GetAvatarLocation(Avatar avatar)
+		{
+			if (!_avatarMapTiles.ContainsKey(avatar))
+			{ throw new Exception("AbstractQuest GetAvatarLocation(avatar) avatar is not in the Quest!"); }
+
+			Point point = Map.GetMapTileLocation(_avatarMapTiles[avatar]);
+			if (point == null)
+			{ throw new Exception("AbstractQuest GetAvatarLocation(avatar) Unable to find a location for the avatar's map tile!"); }
+
+			return point;
+		}
+
+		public MapTile GetAvatarMapTile(Avatar avatar)
+		{
+			if (!_avatarMapTiles.ContainsKey(avatar))
+			{ throw new Exception("AbstractQuest GetAvatarLocation(avatar) avatar is not in the Quest!"); }
+
+			return _avatarMapTiles[avatar];
+		}
+
 		public Boolean AreAnyHeroesAlive
 		{
 			get
@@ -55,6 +75,25 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 				}
 				return false;
 			}
+		}
+
+		public List<Avatar> GetEnemiesOfAvatar(Avatar avatar)
+		{
+			List<Avatar> enemies = new List<Avatar>();
+
+			switch (avatar.Faction)
+			{
+				case Faction.Heroes:
+					foreach (Monster monster in Monsters)
+					{ enemies.Add(monster); }
+					break;
+				case Faction.Xargon:
+					foreach (Hero hero in Heroes)
+					{ enemies.Add(hero); }
+					break;
+			}
+
+			return enemies;
 		}
 
 		public Dictionary<Avatar, MapTile> AvatarMapTiles
