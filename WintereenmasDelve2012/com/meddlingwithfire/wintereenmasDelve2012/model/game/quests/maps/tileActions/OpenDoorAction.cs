@@ -5,42 +5,39 @@ using System.Text;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.quests.maps;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.quests.maps;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game;
+using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.quests;
 
 namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.quests.maps.tileActions
 {
-	public class OpenDoorAction : AbstractTileAction, IRequiresModifiableMap, IRequiresAvatar, IRequiresAvatarTiles
+	public class OpenDoorAction : AbstractTileAction, IRequiresAvatar, IRequiresQuest
 	{
 		private MapTile _doorTileA;
 		private MapTile _doorTileB;
 
-		private QuestMap _map;
+		private AbstractQuest _quest;
 		private Avatar _avatar;
-		private Dictionary<Avatar, MapTile> _avatarTiles;
 
 		public OpenDoorAction(MapTile doorTileA, MapTile doorTileB)
-			: base()
+			: base(false)
 		{
 			_doorTileA = doorTileA;
 			_doorTileB = doorTileB;
 		}
 
-		public void SetModifiableMap(QuestMap map)
-		{ _map = map; }
+		public void SetQuest(AbstractQuest quest)
+		{ _quest = quest; }
 
 		public void SetAvatar(Avatar avatar)
 		{ _avatar = avatar; }
 
-		public void SetAvatarTiles(Dictionary<Avatar, MapTile> avatarTiles)
-		{ _avatarTiles = avatarTiles; }
-
 		public override void Execute()
 		{
-			if (_map == null)
-			{ throw new Exception("OpenDoorAction Execute called, but no IModifiableMap was set!"); }
+			if (_quest == null)
+			{ throw new Exception("OpenDoorAction Execute called, but no AbstractQuest was set!"); }
 
-			Point avatarLocation = _map.GetMapTileLocation(_avatarTiles[_avatar]);
-			Point aLocation = _map.GetMapTileLocation(_doorTileA);
-			Point bLocation = _map.GetMapTileLocation(_doorTileB);
+			Point avatarLocation = _quest.GetAvatarLocation(_avatar);
+			Point aLocation = _quest.Map.GetMapTileLocation(_doorTileA);
+			Point bLocation = _quest.Map.GetMapTileLocation(_doorTileB);
 
 			// Update the avatars movement vector to fit the door he opened.
 			Point nextPoint = aLocation;
@@ -51,8 +48,8 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model
 			_avatar.movementVector.Y = nextPoint.Y - avatarLocation.Y;
 
 			// Remove the door tiles from the map
-			_map.RemoveMapTile(_doorTileA);
-			_map.RemoveMapTile(_doorTileB);
+			_quest.Map.RemoveMapTile(_doorTileA);
+			_quest.Map.RemoveMapTile(_doorTileB);
 		}
 	}
 }

@@ -13,7 +13,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model
 		private QuestMap _map;
 
 		public OpenTreasureChestAction(MapTile tile)
-			: base()
+			: base(false)
 		{
 			_tile = tile;
 		}

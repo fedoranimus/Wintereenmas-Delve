@@ -11,6 +11,7 @@ using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.gam
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.quests.maps.tileActions;
+using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.actionStrategies;
 
 namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 {
@@ -26,16 +27,21 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 
 		public String ImagePath;
 
-		private int _movementPointsLeftForTurn;
-		private int _movementPointsForTurn;
+		public AvatarTurnState TurnState;
 
-		private Boolean _hasTakenTurnAction;
 		private Boolean _sentDeathMessage;
 
 		public int ActualBodyPointsRemaining;
 		public int ActualMindPointsRemaining;
 
 		public Point movementVector;
+
+		/// <summary>
+		/// The action that the Avatar is focused on.  Will continue to consume
+		/// turn cycles until the action is completely finished, or the Avatars' 
+		/// BreakFocus() method has been called.
+		/// </summary>
+		private TurnStepAction _focusAction;
 
 		public Avatar(Faction faction, AvatarClass avatarClass, String imagePath)
 			: base()
@@ -46,6 +52,8 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 
 			movementVector = new Point(0, 0);
 
+			TurnState = new AvatarTurnState();
+
 			ActualBodyPointsRemaining = avatarClass.BaseMaximumBodyPoints;
 			ActualMindPointsRemaining = avatarClass.BaseMaximumMindPoints;
 
@@ -54,9 +62,14 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 			_backpackItems = new List<Item>();
 		}
 
+		public void BreakFocus()
+		{ _focusAction = null; }
+
 		public void DefendAgainst(int attackDamageRolled, ChanceProvider chanceProvider)
 		{
+			BreakFocus(); // If the Avatar is hit, break the focus of the Avatar.
 
+			// TODO: Defend!
 		}
 
 		public Boolean IsHeroAlive
@@ -76,9 +89,9 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 		virtual public void StartTurn()
 		{
 			// Roll for movement dice
-			_movementPointsForTurn = _avatarClass.BaseMovementBehavior.GetMovementPointsForTurn();
-			_movementPointsLeftForTurn = _movementPointsForTurn;
-			_hasTakenTurnAction = false;
+			TurnState.TotalMovementPointsForTurn = _avatarClass.BaseMovementBehavior.GetMovementPointsForTurn();
+			TurnState.MovementPointsLeft = TurnState.TotalMovementPointsForTurn;
+			TurnState.HasTakenAction = false;
 			_sentDeathMessage = false;
 		}
 
@@ -94,62 +107,34 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 					return new DeadTurnStepAction(this);
 				}
 			}
-			if (_movementPointsLeftForTurn <= 0 && _hasTakenTurnAction) // We can continue our turn as long as we have movement points left, and have not taken our action
+			if (TurnState.MovementPointsLeft <= 0 && TurnState.HasTakenAction) // We can continue our turn as long as we have movement points left, and have not taken our action
 			{ return null; }
 
+			// Determine the action to perform
 			TurnStepAction action = null;
-
-			List<AbstractTileAction> actionsForCurrentLocation = mapAnalyzer.GetActionsForObserverLocation(this);
-			if (actionsForCurrentLocation.Count > 0)
+			for (int i = 0; i < _avatarClass.ActionStrategies.Count && action == null; i++)
 			{
-				AbstractTileAction tileAction = actionsForCurrentLocation[0];
-				action = new ActionableTurnStepAction(tileAction, this);
-
-				if (_movementPointsForTurn != _movementPointsLeftForTurn)
-				{ _movementPointsLeftForTurn = 0; }
-				_hasTakenTurnAction = true; // End the turn
-			}
-			else
-			{
-				List<LocationOfInterest> interestingDestinations = mapAnalyzer.GetInterestingLocations(this);
-				interestingDestinations = interestingDestinations.OrderBy(item => item.StepsToLocation).ToList();
-
-				// TODO: Implement AI
-				if (interestingDestinations.Count <= 0)
+				AbstractActionStrategy strategy = _avatarClass.ActionStrategies[i];
+				if (_focusAction == null || strategy.CanBreakFocus)
 				{
-					PointList unwalkedTiles = mapAnalyzer.GetAdjacentUnvisitedLocations(this);
-					if (unwalkedTiles.Count <= 0)
-					{
-						interestingDestinations = mapAnalyzer.GetInterestingLocationsCheating(this);
-						interestingDestinations = interestingDestinations.OrderBy(item => item.StepsToLocation).ToList();
-
-						if (interestingDestinations.Count > 0)
-						{
-							action = new MovementTurnStepAction(this, interestingDestinations[0].StepsToLocation[0]);
-							_movementPointsLeftForTurn--;
-						}
-						else
-						{
-							action = new ConfusedTurnStepAction(this); // In the real game, this should never happen.  Avatars should always find *something* to do.
-							_movementPointsLeftForTurn = 0; // End the turn
-							_hasTakenTurnAction = true; // End the turn
-						}
-					}
-					else
-					{
-						action = new MovementTurnStepAction(this, unwalkedTiles[0]);
-						_movementPointsLeftForTurn--;
-					}
-				}
-				else
-				{
-					action = new MovementTurnStepAction(this, interestingDestinations[0].StepsToLocation[0]);
-					_movementPointsLeftForTurn--;
+					action = strategy.FindAction(this, TurnState, mapAnalyzer, chanceProvider);
+					if (action != null)
+					{ _focusAction = null; }
 				}
 			}
 
-			//ActualBodyPointsRemaining -= 2; // Testing death scenario
-			_hasTakenTurnAction = true; // TODO: only set to true if the Avatar has taken their turn action
+			if (_focusAction != null && _focusAction.AcceptsAvatarFocus && _focusAction.HasMoreTurns) // If our focus action still has stuff to do, let it keep focus
+			{ action = _focusAction; }
+
+			if (action == null) // If we can't figure anything else out, then end the turn.
+			{
+				action = new ConfusedTurnStepAction(this); // In the real game, this should never happen.  Avatars should always find *something* to do.
+				TurnState.HasTakenAction = true;
+				TurnState.MovementPointsLeft = 0;
+			}
+
+			if (action.AcceptsAvatarFocus && action.HasMoreTurns) // If the action is multi-step, focus on it until something interrupts us
+			{ _focusAction = action; }
 
 			return action;
 		}

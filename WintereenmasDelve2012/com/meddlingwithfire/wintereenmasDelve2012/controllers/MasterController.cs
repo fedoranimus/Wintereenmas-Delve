@@ -29,7 +29,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 
 		public void TakeOverExperience()
 		{
-			// First, go to the Chance Gatherer
+			//// First, go to the Chance Gatherer
 			//ChanceGatherer chanceGatherer = new ChanceGatherer();
 			//chanceGatherer.Complete += OnChanceGathererComplete;
 			//_navigationService.Navigate(chanceGatherer);

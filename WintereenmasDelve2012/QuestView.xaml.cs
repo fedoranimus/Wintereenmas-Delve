@@ -168,7 +168,7 @@ namespace WintereenmasDelve2012
 				else
 				{
 					action.Complete += OnCurrentActionCommitComplete;
-					action.Commit(_quest.Map, _quest.AvatarMapTiles, _storyTeller);
+					action.Commit(_quest, _storyTeller);
 				}
 
 				RenderQuestBoard();

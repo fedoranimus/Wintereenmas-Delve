@@ -8,9 +8,9 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model
 {
 	public class LocationOfInterest
 	{
-		public List<Point> StepsToLocation;
+		public PointList StepsToLocation;
 
-		public LocationOfInterest(List<Point> stepsToLocation)
+		public LocationOfInterest(PointList stepsToLocation)
 			: base()
 		{
 			StepsToLocation = stepsToLocation;

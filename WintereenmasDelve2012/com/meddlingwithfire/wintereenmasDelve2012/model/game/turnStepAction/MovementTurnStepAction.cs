@@ -6,39 +6,53 @@ using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.quests.maps;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.quests.maps;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.storyTelling;
+using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.quests;
 
 namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.turnStepAction
 {
 	public class MovementTurnStepAction : TurnStepAction
 	{
 		private Avatar _avatar;
-		private Point _moveToPoint;
+		private List<Point> _stepsToLocation;
 
-		public MovementTurnStepAction(Avatar actor, Point toLocation)
-			: base()
+		public MovementTurnStepAction(Avatar actor, PointList stepsToLocation)
+			: base(false)
 		{
 			_avatar = actor;
-			_moveToPoint = toLocation;
+			_stepsToLocation = stepsToLocation;
+
+			HasMoreTurns = (_stepsToLocation.Count > 1) ? true : false; // If there are more steps, then we can be used in subsequent turns!
+			AcceptsAvatarFocus = HasMoreTurns;
 		}
 
-		override public void Commit(QuestMap map, Dictionary<Avatar, MapTile> avatarTiles, StoryTeller storyTeller)
+		override public void Commit(AbstractQuest quest, StoryTeller storyTeller)
 		{
-			Story story = new Story();
-			story.Add(storyTeller.NarratorVoice, _avatar.ClassDescription + " moves");
-			storyTeller.StoryComplete += OnStoryComplete;
-			storyTeller.TellStory(story);
+			//Story story = new Story();
+			//story.Add(storyTeller.NarratorVoice, _avatar.ClassDescription + " moves");
+			//storyTeller.StoryComplete += OnStoryComplete;
+			//storyTeller.TellStory(story);
 
 			// Look up the avatars tile
-			MapTile avatarTile = avatarTiles[_avatar];
-			Point avatarCurrentLocation = map.GetMapTileLocation(avatarTile);
+			MapTile avatarTile = quest.GetAvatarMapTile(_avatar);
+			Point avatarCurrentLocation = quest.GetAvatarLocation(_avatar);
 
 			// Update the avatars vector
-			_avatar.movementVector.X = _moveToPoint.X - avatarCurrentLocation.X;
-			_avatar.movementVector.Y = _moveToPoint.Y - avatarCurrentLocation.Y;
+			Point moveToPoint = _stepsToLocation[0];
+			_stepsToLocation.RemoveAt(0);
+
+			HasMoreTurns = (_stepsToLocation.Count > 0) ? true : false; // If there are more steps, then we can be used in subsequent turns!
+			AcceptsAvatarFocus = HasMoreTurns;
+
+			_avatar.movementVector.X = moveToPoint.X - avatarCurrentLocation.X;
+			_avatar.movementVector.Y = moveToPoint.Y - avatarCurrentLocation.Y;
+			
+			_avatar.TurnState.TotalMovementPointsForTurn--;
 
 			// Move the tile
-			map.MoveMapTile(avatarTile, _moveToPoint);
-			map.SetFactionWalkedOn(_avatar.Faction, _moveToPoint);
+			quest.Map.MoveMapTile(avatarTile, moveToPoint);
+			quest.Map.SetFactionWalkedOn(_avatar.Faction, moveToPoint);
+
+			DoComplete();
 		}
 
 		private void OnStoryComplete(object sender, EventArgs args)

@@ -42,7 +42,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 			}
 		}
 
-		public List<AbstractTileAction> GetActionsForObserverLocation(Avatar observer)
+		public List<AbstractTileAction> GetActionsAtObserverLocation(Avatar observer)
 		{
 			Point observerLocation = _questMap.GetMapTileLocation(_avatarTiles[observer]);
 
@@ -87,7 +87,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 				List<PathfindingNode> path = _questMap.PathfindingGraph.FindRoute(observerNode, pointNode);
 				if (path != null)
 				{
-					List<Point> pathSteps = new List<Point>();
+					PointList pathSteps = new PointList();
 					for (int i = 1; i < path.Count; i++)
 					{ pathSteps.Add(_questMap.GetPointForPathfindingNode(path[i])); }
 
@@ -109,16 +109,28 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 			//// Get a list of all actionable map tiles
 			PointList interestingLocations = _questMap.GetActionableMapPoints(observer.Faction);
 
-			// Create paths to each of these points
+			// Find the closest location by straight-line distance.  It was too expensive to calculate Pathfinding distance.
 			MapTile observerMapTile = _avatarTiles[observer];
 			PathfindingNode observerNode = _questMap.GetPathfindingNodeForTile(observerMapTile);
+			Point closestDistanceInterestingLocation = null;
+			double closestDistance = float.MaxValue;
 			foreach (Point point in interestingLocations)
 			{
-				PathfindingNode pointNode = _questMap.GetPathfindingNodeForLocation(point.X, point.Y);
+				double distance = Math.Sqrt(Math.Pow(observerLocation.X - point.X, 2) + Math.Pow(observerLocation.Y - point.Y, 2));
+				if (distance < closestDistance)
+				{
+					closestDistanceInterestingLocation = point;
+					closestDistance = distance;
+				}
+			}
+
+			if (closestDistanceInterestingLocation != null)
+			{
+				PathfindingNode pointNode = _questMap.GetPathfindingNodeForLocation(closestDistanceInterestingLocation.X, closestDistanceInterestingLocation.Y);
 				List<PathfindingNode> path = _questMap.PathfindingGraph.FindRoute(observerNode, pointNode);
 				if (path != null)
 				{
-					List<Point> pathSteps = new List<Point>();
+					PointList pathSteps = new PointList();
 					for (int i = 1; i < path.Count; i++)
 					{ pathSteps.Add(_questMap.GetPointForPathfindingNode(path[i])); }
 
