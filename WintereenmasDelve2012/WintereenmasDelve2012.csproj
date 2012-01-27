@@ -69,7 +69,6 @@
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\actionStrategies\AggressiveCombatStrategy.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\actionStrategies\SearchForInterestingLocationsStrategy.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\Avatar.cs" />
-    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\controllers\QuestController.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClassDwarf.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClassElf.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClassGoblin.cs" />
@@ -85,7 +84,7 @@
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\LocationOfInterest.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\items\Item.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\items\ItemSlot.cs" />
-    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\MapAnalyzer.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\QuestAnalyzer.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\Monster.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\movement\ChanceMovementBehavior.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\movement\ConstantMovementBehavior.cs" />

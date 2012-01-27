@@ -14,12 +14,14 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model
 	{
 		private Avatar _avatar;
 		private List<Point> _stepsToLocation;
+		private MapTile _interestingLocation;
 
-		public MovementTurnStepAction(Avatar actor, PointList stepsToLocation)
+		public MovementTurnStepAction(Avatar actor, PointList stepsToLocation, MapTile interestingLocation=null)
 			: base(false)
 		{
 			_avatar = actor;
 			_stepsToLocation = stepsToLocation;
+			RequiresMovement = true;
 
 			HasMoreTurns = (_stepsToLocation.Count > 1) ? true : false; // If there are more steps, then we can be used in subsequent turns!
 			AcceptsAvatarFocus = HasMoreTurns;
@@ -46,7 +48,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model
 			_avatar.movementVector.X = moveToPoint.X - avatarCurrentLocation.X;
 			_avatar.movementVector.Y = moveToPoint.Y - avatarCurrentLocation.Y;
 			
-			_avatar.TurnState.TotalMovementPointsForTurn--;
+			_avatar.TurnState.MovementPointsLeft--;
 
 			// Move the tile
 			quest.Map.MoveMapTile(avatarTile, moveToPoint);

@@ -17,7 +17,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model
 			CanBreakFocus = canBreakFocus;
 		}
 
-		public virtual TurnStepAction FindAction(Avatar currentAvatar, AvatarTurnState avatarTurnState, MapAnalyzer mapAnalyzer, ChanceProvider chanceProvider)
+		public virtual TurnStepAction FindAction(Avatar currentAvatar, AvatarTurnState avatarTurnState, QuestAnalyzer mapAnalyzer, ChanceProvider chanceProvider)
 		{ return null; } // Override in subclasses
 	}
 }

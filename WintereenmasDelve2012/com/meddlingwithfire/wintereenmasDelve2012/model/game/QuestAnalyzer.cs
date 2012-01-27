@@ -8,46 +8,29 @@ using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.quests.maps.tileActions;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game;
 using PathFinding;
+using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.quests;
 
 namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 {
-	public class MapAnalyzer
+	public class QuestAnalyzer
 	{
 		/// <summary>
-		/// The state of the map.
+		/// The state of the quest.
 		/// </summary>
-		private QuestMap _questMap;
+		private AbstractQuest _quest;
 
-		/// <summary>
-		/// The positions of all of the Avatars.
-		/// </summary>
-		private Dictionary<Avatar, MapTile> _avatarTiles;
-
-		private List<Point> _heroFactionVisitedLocations;
-
-		public MapAnalyzer(QuestMap map, Dictionary<Avatar, MapTile> avatarTiles):base()
+		public QuestAnalyzer(AbstractQuest quest):base()
 		{
-			_questMap = map;
-			_avatarTiles = avatarTiles;
-
-			_heroFactionVisitedLocations = new List<Point>();
-		}
-
-		public void UpdateVisitedLocations(Avatar avatar, Point newLocation)
-		{
-			if (avatar.Faction == Faction.Heroes)
-			{
-				if (!DoesListContainLocation(_heroFactionVisitedLocations, newLocation.X, newLocation.Y))
-				{ _heroFactionVisitedLocations.Add(newLocation); }
-			}
+			_quest = quest;
 		}
 
 		public List<AbstractTileAction> GetActionsAtObserverLocation(Avatar observer)
 		{
-			Point observerLocation = _questMap.GetMapTileLocation(_avatarTiles[observer]);
+			MapTile observerTile = _quest.GetAvatarMapTile(observer);
+			Point observerLocation = _quest.Map.GetMapTileLocation(observerTile);
 
 			//// Get a list of all actionable map tiles
-			PointList interestingLocations = _questMap.GetActionableMapPoints(observer.Faction);
+			PointList interestingLocations = _quest.Map.GetActionableMapPoints(observer.Faction);
 
 			// Filter out interesting locations that are not in the visible set
 			PointList observerLocations = new PointList();
@@ -57,7 +40,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 			List<AbstractTileAction> actions = new List<AbstractTileAction>();
 			for (int i = 0; i < visibleInterestingLocations.Count; i++)
 			{
-				List<AbstractTileAction> actionsAtInterestingLocation = _questMap.GetActionsForPoint(observerLocation);
+				List<AbstractTileAction> actionsAtInterestingLocation = _quest.Map.GetActionsForPoint(observerLocation);
 				foreach (AbstractTileAction actionAtInterestingLocation in actionsAtInterestingLocation)
 				{ actions.Add(actionAtInterestingLocation); }
 			}
@@ -69,27 +52,27 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 		{
 			List<LocationOfInterest> locationsOfInterest = new List<LocationOfInterest>();
 
-			Point observerLocation = _questMap.GetMapTileLocation(_avatarTiles[observer]);
-			PointList visibleLocations = _questMap.GetPointsWithinLineOfSightOf(observerLocation);
+			MapTile observerTile = _quest.GetAvatarMapTile(observer);
+			Point observerLocation = _quest.Map.GetMapTileLocation(observerTile);
+			PointList visibleLocations = _quest.Map.GetPointsWithinLineOfSightOf(observerLocation);
 
 			//// Get a list of all actionable map tiles
-			PointList interestingLocations = _questMap.GetActionableMapPoints(observer.Faction);
+			PointList interestingLocations = _quest.Map.GetActionableMapPoints(observer.Faction);
 			
 			// Filter out interesting locations that are not in the visible set
 			PointList visibleInterestingLocations = interestingLocations.Intersects(visibleLocations);
 
 			// Create paths to each of these points
-			MapTile observerMapTile = _avatarTiles[observer];
-			PathfindingNode observerNode = _questMap.GetPathfindingNodeForTile(observerMapTile);
+			PathfindingNode observerNode = _quest.Map.GetPathfindingNodeForTile(observerTile);
 			foreach (Point point in visibleInterestingLocations)
 			{
-				PathfindingNode pointNode = _questMap.GetPathfindingNodeForLocation(point.X, point.Y);
-				List<PathfindingNode> path = _questMap.PathfindingGraph.FindRoute(observerNode, pointNode);
+				PathfindingNode pointNode = _quest.Map.GetPathfindingNodeForLocation(point.X, point.Y);
+				List<PathfindingNode> path = _quest.Map.PathfindingGraph.FindRoute(observerNode, pointNode);
 				if (path != null)
 				{
 					PointList pathSteps = new PointList();
 					for (int i = 1; i < path.Count; i++)
-					{ pathSteps.Add(_questMap.GetPointForPathfindingNode(path[i])); }
+					{ pathSteps.Add(_quest.Map.GetPointForPathfindingNode(path[i])); }
 
 					LocationOfInterest interest = new LocationOfInterest(pathSteps);
 					locationsOfInterest.Add(interest);
@@ -103,15 +86,15 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 		{
 			List<LocationOfInterest> locationsOfInterest = new List<LocationOfInterest>();
 
-			Point observerLocation = _questMap.GetMapTileLocation(_avatarTiles[observer]);
-			PointList visibleLocations = _questMap.GetPointsWithinLineOfSightOf(observerLocation);
+			MapTile observerTile = _quest.GetAvatarMapTile(observer);
+			Point observerLocation = _quest.Map.GetMapTileLocation(observerTile);
+			PointList visibleLocations = _quest.Map.GetPointsWithinLineOfSightOf(observerLocation);
 
 			//// Get a list of all actionable map tiles
-			PointList interestingLocations = _questMap.GetActionableMapPoints(observer.Faction);
+			PointList interestingLocations = _quest.Map.GetActionableMapPoints(observer.Faction);
 
 			// Find the closest location by straight-line distance.  It was too expensive to calculate Pathfinding distance.
-			MapTile observerMapTile = _avatarTiles[observer];
-			PathfindingNode observerNode = _questMap.GetPathfindingNodeForTile(observerMapTile);
+			PathfindingNode observerNode = _quest.Map.GetPathfindingNodeForTile(observerTile);
 			Point closestDistanceInterestingLocation = null;
 			double closestDistance = float.MaxValue;
 			foreach (Point point in interestingLocations)
@@ -126,13 +109,13 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 
 			if (closestDistanceInterestingLocation != null)
 			{
-				PathfindingNode pointNode = _questMap.GetPathfindingNodeForLocation(closestDistanceInterestingLocation.X, closestDistanceInterestingLocation.Y);
-				List<PathfindingNode> path = _questMap.PathfindingGraph.FindRoute(observerNode, pointNode);
+				PathfindingNode pointNode = _quest.Map.GetPathfindingNodeForLocation(closestDistanceInterestingLocation.X, closestDistanceInterestingLocation.Y);
+				List<PathfindingNode> path = _quest.Map.PathfindingGraph.FindRoute(observerNode, pointNode);
 				if (path != null)
 				{
 					PointList pathSteps = new PointList();
 					for (int i = 1; i < path.Count; i++)
-					{ pathSteps.Add(_questMap.GetPointForPathfindingNode(path[i])); }
+					{ pathSteps.Add(_quest.Map.GetPointForPathfindingNode(path[i])); }
 
 					LocationOfInterest interest = new LocationOfInterest(pathSteps);
 					locationsOfInterest.Add(interest);
@@ -145,8 +128,9 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 
 		public PointList GetAdjacentUnvisitedLocations(Avatar observer)
 		{
-			Point observerLocation = _questMap.GetMapTileLocation(_avatarTiles[observer]);
-			PointList points = _questMap.GetAdjacentUnwalkedTiles(observerLocation, observer.Faction);
+			MapTile observerTile = _quest.GetAvatarMapTile(observer);
+			Point observerLocation = _quest.Map.GetMapTileLocation(observerTile);
+			PointList points = _quest.Map.GetAdjacentUnwalkedTiles(observerLocation, observer.Faction);
 
 			// Favor points in the direction of the Avatars' movement vector
 			Point desiredPoint = new Point(
@@ -161,6 +145,46 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 			points = points.Intersects(match);
 
 			return points;
+		}
+
+		public List<Avatar> GetAdjacentEnemies(Avatar observer, Boolean includeDiagonalTiles)
+		{
+			List<Avatar> adjacentEnemies = new List<Avatar>();
+
+			MapTile observerMapTile = _quest.GetAvatarMapTile(observer);
+			Point observerLocation = _quest.Map.GetMapTileLocation(observerMapTile);
+
+			double minimumDistance = includeDiagonalTiles ? Math.Sqrt(2) : 1;
+			List<Avatar> allEnemies = _quest.GetEnemiesOfAvatar(observer);
+			foreach (Avatar enemy in allEnemies)
+			{
+				MapTile enemyMapTile = _quest.GetAvatarMapTile(enemy);
+				Point enemyPoint = _quest.Map.GetMapTileLocation(enemyMapTile);
+				double distance = Math.Sqrt(Math.Pow(enemyPoint.X - observerLocation.X, 2) + Math.Pow(enemyPoint.Y - observerLocation.Y, 2));
+				if (distance <= minimumDistance)
+				{ adjacentEnemies.Add(enemy); }
+			}
+
+			return adjacentEnemies;
+		}
+
+		public List<Avatar> GetVisibleEnemies(Avatar observer)
+		{
+			List<Avatar> visibleEnemies = new List<Avatar>();
+
+			MapTile observerMapTile = _quest.GetAvatarMapTile(observer);
+			Point observerLocation = _quest.Map.GetMapTileLocation(observerMapTile);
+			PointList visibleLocations = _quest.Map.GetPointsWithinLineOfSightOf(observerLocation);
+
+			List<Avatar> allEnemies = _quest.GetEnemiesOfAvatar(observer);
+			foreach (Avatar enemy in allEnemies)
+			{
+				MapTile enemyMapTile = _quest.GetAvatarMapTile(enemy);
+				Point enemyPoint = _quest.Map.GetMapTileLocation(enemyMapTile);
+				if (visibleLocations.ContainsLocation(enemyPoint.X, enemyPoint.Y))
+				{ visibleEnemies.Add(enemy); }
+			}
+			return visibleEnemies;
 		}
 
 		private Boolean DoesListContainLocation(List<Point> list, int locationX, int locationY)

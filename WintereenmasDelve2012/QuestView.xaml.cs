@@ -44,7 +44,7 @@ namespace WintereenmasDelve2012
 		private Avatar _currentTurnTaker;
 		private int _currentTurnTakerIndex;
 
-		private MapAnalyzer _gameStateAnalyzer;
+		private QuestAnalyzer _questAnalyzer;
 		private DispatcherTimer _turnTimer;
 
 		public QuestView(AbstractQuest quest, ChanceProvider chanceProvider, StoryTeller storyTeller)
@@ -134,7 +134,7 @@ namespace WintereenmasDelve2012
 			_currentTurnTaker = _turnTakers[_currentTurnTakerIndex];
 			_currentTurnTaker.StartTurn();
 
-			_gameStateAnalyzer = new MapAnalyzer(_quest.Map, _quest.AvatarMapTiles);
+			_questAnalyzer = new QuestAnalyzer(_quest);
 			PerformNextTurnCycle(); // Immediately take one turn
 		}
 
@@ -154,7 +154,7 @@ namespace WintereenmasDelve2012
 			}
 			else
 			{
-				TurnStepAction action = _currentTurnTaker.DoTakeTurnStep(_gameStateAnalyzer, _chanceProvider);
+				TurnStepAction action = _currentTurnTaker.DoTakeTurnStep(_questAnalyzer, _chanceProvider);
 
 				if (action == null) // The current player has no more steps to take
 				{

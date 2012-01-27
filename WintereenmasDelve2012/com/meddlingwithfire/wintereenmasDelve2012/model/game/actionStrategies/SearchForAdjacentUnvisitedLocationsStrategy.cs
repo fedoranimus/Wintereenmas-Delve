@@ -16,7 +16,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model
 
 		}
 
-		override public TurnStepAction FindAction(Avatar currentAvatar, AvatarTurnState avatarTurnState, MapAnalyzer mapAnalyzer, ChanceProvider chanceProvider)
+		override public TurnStepAction FindAction(Avatar currentAvatar, AvatarTurnState avatarTurnState, QuestAnalyzer mapAnalyzer, ChanceProvider chanceProvider)
 		{
 			PointList unwalkedTiles = mapAnalyzer.GetAdjacentUnvisitedLocations(currentAvatar);
 			if (unwalkedTiles.Count <= 0)

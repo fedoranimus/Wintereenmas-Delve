@@ -33,6 +33,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model
 
 			if (_tileAction.ConsumesTurnAction)
 			{
+				RequiresAction = true;
 				_avatar.TurnState.HasTakenAction = true;
 				if (_avatar.TurnState.TotalMovementPointsForTurn != _avatar.TurnState.MovementPointsLeft)
 				{ _avatar.TurnState.MovementPointsLeft = 0; }

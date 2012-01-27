@@ -14,7 +14,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model
 			: base(false)
 		{ }
 
-		override public TurnStepAction FindAction(Avatar currentAvatar, AvatarTurnState avatarTurnState, MapAnalyzer mapAnalyzer, ChanceProvider chanceProvider)
+		override public TurnStepAction FindAction(Avatar currentAvatar, AvatarTurnState avatarTurnState, QuestAnalyzer mapAnalyzer, ChanceProvider chanceProvider)
 		{
 			List<LocationOfInterest> interestingDestinations = mapAnalyzer.GetInterestingLocations(currentAvatar);
 			if (interestingDestinations.Count <= 0)

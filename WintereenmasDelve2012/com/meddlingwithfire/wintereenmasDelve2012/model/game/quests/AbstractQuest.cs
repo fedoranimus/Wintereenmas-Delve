@@ -77,6 +77,25 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.
 			}
 		}
 
+		public List<Avatar> GetEnemiesOfAvatar(Avatar avatar)
+		{
+			List<Avatar> enemies = new List<Avatar>();
+
+			switch (avatar.Faction)
+			{
+				case Faction.Heroes:
+					foreach (Monster monster in Monsters)
+					{ enemies.Add(monster); }
+					break;
+				case Faction.Xargon:
+					foreach (Hero hero in Heroes)
+					{ enemies.Add(hero); }
+					break;
+			}
+
+			return enemies;
+		}
+
 		public Dictionary<Avatar, MapTile> AvatarMapTiles
 		{
 			get { return _avatarMapTiles; }

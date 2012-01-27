@@ -16,12 +16,16 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model
 
 		public Boolean AcceptsAvatarFocus;
 		public Boolean HasMoreTurns;
+		public Boolean RequiresAction;
+		public Boolean RequiresMovement;
 
 		public TurnStepAction(Boolean acceptsAvatarFocus)
 			: base()
 		{
 			AcceptsAvatarFocus = acceptsAvatarFocus;
 			HasMoreTurns = false;
+			RequiresAction = false;
+			RequiresMovement = false;
 		}
 
 		public virtual void Commit(AbstractQuest map, StoryTeller storyTeller)

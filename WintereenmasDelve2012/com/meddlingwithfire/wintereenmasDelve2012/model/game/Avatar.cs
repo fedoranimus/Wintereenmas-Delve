@@ -82,6 +82,11 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 			get { return _avatarClass.Description; }
 		}
 
+		public Boolean CanAttackAdjacent
+		{
+			get { return false; } // TODO: Loop through items and check for adjacent-attacking weapons
+		}
+
 		/// <summary>
 		/// Called just before the avatars turn begins.  Gives the class a chance to prep whatever one-time calculations it needs to perform. 
 		/// For example, rolling for movement dice is only done once per turn.
@@ -95,7 +100,7 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 			_sentDeathMessage = false;
 		}
 
-		virtual public TurnStepAction DoTakeTurnStep(MapAnalyzer mapAnalyzer, ChanceProvider chanceProvider)
+		virtual public TurnStepAction DoTakeTurnStep(QuestAnalyzer mapAnalyzer, ChanceProvider chanceProvider)
 		{
 			if (!IsHeroAlive) // Can't play if dead.
 			{
@@ -118,13 +123,20 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 				if (_focusAction == null || strategy.CanBreakFocus)
 				{
 					action = strategy.FindAction(this, TurnState, mapAnalyzer, chanceProvider);
+					
+					if (action != null && !MayTakeAction(action, TurnState))
+					{ action = null; }
+
 					if (action != null)
 					{ _focusAction = null; }
 				}
 			}
 
 			if (_focusAction != null && _focusAction.AcceptsAvatarFocus && _focusAction.HasMoreTurns) // If our focus action still has stuff to do, let it keep focus
-			{ action = _focusAction; }
+			{
+				if (MayTakeAction(_focusAction, TurnState))
+				{ action = _focusAction; }
+			}
 
 			if (action == null) // If we can't figure anything else out, then end the turn.
 			{
@@ -137,6 +149,15 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game
 			{ _focusAction = action; }
 
 			return action;
+		}
+
+		private Boolean MayTakeAction(TurnStepAction action, AvatarTurnState turnState)
+		{
+			if (action.RequiresAction && turnState.HasTakenAction)
+			{ return false; } // Cannot use this action if the player has already taken his action this turn.
+			else if (action.RequiresMovement && turnState.MovementPointsLeft <= 0)
+			{ return false; } // Cannot use this action if the player has no movement points left this turn.
+			return true;
 		}
 	}
 }
