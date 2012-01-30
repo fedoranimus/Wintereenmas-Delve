@@ -6,6 +6,7 @@ using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.ques
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.quests.maps;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.storyTelling;
+using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.game.quests;
 
 namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.turnStepAction
 {
@@ -13,13 +14,21 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model
 	{
 		public EventHandler Complete;
 
-		public TurnStepAction()
+		public Boolean AcceptsAvatarFocus;
+		public Boolean HasMoreTurns;
+		public Boolean RequiresAction;
+		public Boolean RequiresMovement;
+
+		public TurnStepAction(Boolean acceptsAvatarFocus)
 			: base()
 		{
-
+			AcceptsAvatarFocus = acceptsAvatarFocus;
+			HasMoreTurns = false;
+			RequiresAction = false;
+			RequiresMovement = false;
 		}
 
-		public virtual void Commit(QuestMap map, Dictionary<Avatar, MapTile> avatarTiles, StoryTeller storyTeller)
+		public virtual void Commit(AbstractQuest map, StoryTeller storyTeller)
 		{ } // Override with subclasses
 
 		protected void DoComplete()

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.items;
 using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.movement;
+using WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.actionStrategies;
 
 namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model.game.avatarClasses
 {
@@ -20,6 +21,8 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model
 		public String ImagePath;
 		public String Description;
 
+		public List<AbstractActionStrategy> ActionStrategies;
+
 		public AvatarClass(int baseAttackDice, int baseDefendDice, int baseMaximumBodyPoints, int baseMaximumMindPoints, IAvatarMovementBehavior movementBehavior, String imagePath, String description)
 			: base()
 		{
@@ -30,6 +33,8 @@ namespace WintereenmasDelve2012.com.meddlingwithfire.wintereenmasDelve2012.model
 			BaseMovementBehavior = movementBehavior;
 			ImagePath = imagePath;
 			Description = description;
+
+			ActionStrategies = new List<AbstractActionStrategy>();
 		}
 
 		public virtual List<Item> GenerateStartingItems()

@@ -61,14 +61,21 @@
       <DependentUpon>ChanceGatherer.xaml</DependentUpon>
     </Compile>
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\chance\ChanceSubmission.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\ActionsOfInterest.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\actionStrategies\AbstractActionStrategy.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\actionStrategies\CheatAndFindUnseenInterestingLocations.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\actionStrategies\SearchForAdjacentUnvisitedLocationsStrategy.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\actionStrategies\SearchForCurrentTileActionsStrategy.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\actionStrategies\AggressiveCombatStrategy.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\actionStrategies\SearchForInterestingLocationsStrategy.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\Avatar.cs" />
-    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\controllers\QuestController.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClassDwarf.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClassElf.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClassGoblin.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClassMummy.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClassOrc.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\avatarClasses\AvatarClassWizard.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\AvatarTurnState.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\Faction.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\controllers\MasterController.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\Hero.cs" />
@@ -77,7 +84,7 @@
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\LocationOfInterest.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\items\Item.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\items\ItemSlot.cs" />
-    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\MapAnalyzer.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\QuestAnalyzer.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\Monster.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\movement\ChanceMovementBehavior.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\movement\ConstantMovementBehavior.cs" />
@@ -85,11 +92,12 @@
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\AbstractQuest.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\MapTileList.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tileActions\AbstractTileAction.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tileActions\IRequiresAvatar.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tileActions\IRequiresHero.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tileActions\IRequiresModifiableMap.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tileActions\IRequiresQuest.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tileActions\OpenDoorAction.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tileActions\OpenTreasureChestAction.cs" />
-    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\IModifiableMap.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\MapTile.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\MapTileSet.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\QuestMap.cs" />
@@ -106,6 +114,7 @@
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\WallHorizontalTopTile.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\WallVerticalLeftTile.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\quests\maps\tiles\WallVerticalRightTile.cs" />
+    <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\turnStepAction\ActionableTurnStepAction.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\game\turnStepAction\ConfusedTurnStepAction.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\PointList.cs" />
     <Compile Include="com\meddlingwithfire\wintereenmasDelve2012\model\TwoLinkedPoints.cs" />
